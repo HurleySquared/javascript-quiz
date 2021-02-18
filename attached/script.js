@@ -1,45 +1,67 @@
-var startQuiz = document.querySelector("#start")
-var body = document.querySelector("#container");
-var quiz = document.querySelector("#quiz")
-var userPos = 0;
-var correct = 0;
-var totalQuestion = 5;
+var startButton = document.querySelector("#start")
+var quizContainer = document.querySelector("#container");
+var quiz = document.querySelector("#quiz");
+var score = document.querySelector("#score");
+var currentQuestion = 0;
 
 // Quiz Questions/Answers/CorrectAnswer in array of myQuestions
-var myQuestion = [
+var myQuestions = [
     {
         question: "What is the stock motor for 2020 Ford Mustang GT?",
-        answers: ["5.0l", "5.7l", "6.2l", "6.7l"],
-        correctAnswer: 0
+        answers: ["5.0l","5.7l", "6.2l", "6.7l"],
+        correct: "5.0l"
     },
     {
         question: "What is the stock motor for 1993 Toyota Supra MkIV?",
-        answers: ["RB26DETT", "2.5l Boxer", "Rotary", "2JZ-GTE"],
-        correctAnswer: 3
+        answers: ["RB26DETT","2.5l Boxer", "Rotary", "2JZ-GTE"],
+        correct: "2JZ-GTE"
     },
     {
         question: "What is the stock motor for 2020 Dodge Challenger Hellcat Redeye?",
-        answers: ["5.0l", "5.7l", "6.2l", "6.7l"],
-        correctAnswer: 2
+        answers: ["5.0l","5.7l", "6.2l", "6.7l"],
+        correct: "6.2l"
     },
     {
         question: "What is the stock motor for 1993 Nissan GT-R R32?",
-        answers: ["2JZ-GTE", "RB26DETT", "2.5l Boxer", "Rotary"],
-        correctAnswer: 1
+        answers: ["RB26DETT","2.5l Boxer", "Rotary", "2JZ-GTE"],
+        correct: "RB26DETT"
     },
     {
-        question: "What is the stock motor for 2020 Subaru WRX STI?",
-        answers: ["2JZ-GTE", "RB26DETT", "2.5l Boxer", "Rotary"],
-        correctAnswer: 2
-    },
+        question: "What is the stock motor for 2020 Subaru WRX STI?", 
+        answers: ["RB26DETT","2.5l Boxer", "Rotary", "2JZ-GTE"],
+        correct: "2.5l Boxer"
+    }
 ]
 
-function quizBegin() {
-    console.log("Quiz Start");
+var answers = myQuestions[0].correct[0];
+console.log(answers);
+
+function checkResults(event) {
+    console.log(event.target.textContent);
+    if (event.target.textContent !== myQuestions[currentQuestion].correct) {
+    window.alert("Please Choose Again");
+    }
+    currentQuestion++;
+    if (currentQuestion !== myQuestions.length) {
+        showQuestion();
+    } else {
+        window.alert("Game Over");
+    }
 }
 
-// function motorQuiz() {
-// }
+function showQuestion() {
+    quiz.textContent = myQuestions[currentQuestion].question;
+    score.innerHTML = "";
+    for (var i = 0; i < myQuestions[currentQuestion].answers.length; i++) {
+        var element = myQuestions[currentQuestion].answers[i];
+        var newBtn = document.createElement("button");
+        newBtn.textContent = element;
+        console.log(newBtn, score);
+        newBtn.addEventListener("click", checkResults);
+        score.appendChild(newBtn);
+    }
+}
 
-
-startQuiz.addEventListener("click", quizBegin);
+startButton.addEventListener("click", function () {
+    showQuestion();
+})
