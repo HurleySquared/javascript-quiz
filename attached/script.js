@@ -2,7 +2,10 @@ var startButton = document.querySelector("#start")
 var quizContainer = document.querySelector("#container");
 var quiz = document.querySelector("#quiz");
 var score = document.querySelector("#score");
+var timerEl = document.querySelector("#timer");
 var currentQuestion = 0;
+var secondsLeft = 60;
+var timerInterval;
 
 // Quiz Questions/Answers/CorrectAnswer in array of myQuestions
 var myQuestions = [
@@ -39,13 +42,14 @@ console.log(answers);
 function checkResults(event) {
     console.log(event.target.textContent);
     if (event.target.textContent !== myQuestions[currentQuestion].correct) {
-    window.alert("Please Choose Again");
+        secondsLeft -= 10;
     }
     currentQuestion++;
     if (currentQuestion !== myQuestions.length) {
         showQuestion();
-    } else {
-        window.alert("Game Over");
+    } 
+    else {
+        clearInterval(timerInterval);
     }
 }
 
@@ -62,6 +66,21 @@ function showQuestion() {
     }
 }
 
+function startTimer() {
+        timerInterval = setInterval(function() {
+        secondsLeft--;
+        timerEl.textContent = secondsLeft + " seconds left 'til Game Over!";
+        
+        if (secondsLeft <= 0) {
+            clearInterval(timerInterval);
+            gameOver();
+        }
+        
+    }, 1000);
+}
+
+
 startButton.addEventListener("click", function () {
     showQuestion();
+    startTimer();
 })
