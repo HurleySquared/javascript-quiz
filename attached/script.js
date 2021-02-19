@@ -1,11 +1,16 @@
-var startButton = document.querySelector("#start")
-var quizContainer = document.querySelector("#container");
+var startButton = document.querySelector("#start");
+var restartButton = document.querySelector("#restart");
+var container = document.querySelector("#container");
 var quiz = document.querySelector("#quiz");
 var score = document.querySelector("#score");
 var timerEl = document.querySelector("#timer");
+var highScoreBtn = document.querySelector("#high-score");
 var currentQuestion = 0;
 var secondsLeft = 60;
 var timerInterval;
+var initials;
+var userScore;
+var lastScore;
 
 // Quiz Questions/Answers/CorrectAnswer in array of myQuestions
 var myQuestions = [
@@ -42,7 +47,7 @@ console.log(answers);
 function checkResults(event) {
     console.log(event.target.textContent);
     if (event.target.textContent !== myQuestions[currentQuestion].correct) {
-        secondsLeft -= 10;
+       secondsLeft -= 10;
     }
     currentQuestion++;
     if (currentQuestion !== myQuestions.length) {
@@ -50,6 +55,10 @@ function checkResults(event) {
     } 
     else {
         clearInterval(timerInterval);
+        var initials = prompt("Enter Initials");
+        console.log(initials);
+        var userScore = localStorage.setItem(initials, JSON.stringify(secondsLeft));
+        gameOver();
     }
 }
 
@@ -60,7 +69,6 @@ function showQuestion() {
         var element = myQuestions[currentQuestion].answers[i];
         var newBtn = document.createElement("button");
         newBtn.textContent = element;
-        console.log(newBtn, score);
         newBtn.addEventListener("click", checkResults);
         score.appendChild(newBtn);
     }
@@ -69,18 +77,29 @@ function showQuestion() {
 function startTimer() {
         timerInterval = setInterval(function() {
         secondsLeft--;
-        timerEl.textContent = secondsLeft + " seconds left 'til Game Over!";
+        timerEl.textContent = secondsLeft + " seconds!";
+        
         
         if (secondsLeft <= 0) {
             clearInterval(timerInterval);
-            gameOver();
-        }
-        
+        } 
+
     }, 1000);
 }
 
-
+// Start showing the questions and the timer
 startButton.addEventListener("click", function () {
     showQuestion();
     startTimer();
 })
+// Access to high score page
+highScoreBtn.addEventListener("click", function (){
+    var lastScore = JSON.stringify(localStorage.getItem(userScore))
+    lastScore.textContent = "";
+})
+// Only after game ends can you restart the game
+function gameOver() {
+    restartButton.addEventListener("click", function () {
+        location.reload();
+    })
+}
