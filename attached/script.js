@@ -8,9 +8,9 @@ var highScoreBtn = document.querySelector("#high-score");
 var currentQuestion = 0;
 var secondsLeft = 60;
 var timerInterval;
-var initials;
+var initials = [];
 var userScore;
-var lastScore;
+var lastScore = [];
 
 // Quiz Questions/Answers/CorrectAnswer in array of myQuestions
 var myQuestions = [
@@ -57,7 +57,10 @@ function checkResults(event) {
         clearInterval(timerInterval);
         var initials = prompt("Enter Initials");
         console.log(initials);
-        var userScore = localStorage.setItem(initials, JSON.stringify(secondsLeft));
+        if (secondsLeft < 0) {
+            secondsLeft = 0;
+        }
+        localStorage.setItem(initials, JSON.stringify(secondsLeft));
         gameOver();
     }
 }
@@ -82,6 +85,9 @@ function startTimer() {
         
         if (secondsLeft <= 0) {
             clearInterval(timerInterval);
+            secondsLeft = 0;
+            timerEl.textContent = secondsLeft + " seconds!";
+            gameOver();
         } 
 
     }, 1000);
